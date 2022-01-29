@@ -5,10 +5,10 @@ import fastifyEnv from "fastify-env"
 import fastifyJwt from "fastify-jwt"
 import fastifySwagger from "fastify-swagger"
 import { authRoutes } from "./auth"
-import { corsOptions } from "./cors"
-import { envOptions } from "./env"
-import { prismaPlugin } from "./prisma"
-import { swaggerOptions } from "./swagger"
+import { corsOptions } from "./plugins/cors"
+import { envOptions } from "./plugins/env"
+import { prismaPlugin } from "./plugins/prisma"
+import { swaggerOptions } from "./plugins/swagger"
 
 const server = fastify({ logger: true })
 
