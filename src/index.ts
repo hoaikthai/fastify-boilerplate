@@ -5,8 +5,7 @@ import fastifyEnv from "fastify-env"
 import fastifyJwt from "fastify-jwt"
 import fastifyPostgres from "fastify-postgres"
 import fastifySwagger from "fastify-swagger"
-import { AuthRoute } from "./auth"
-import { buildVerifyJwtDecorator } from "./auth/decorators/verifyJwt"
+import { authRoutes } from "./auth"
 import { corsOptions } from "./cors"
 import { envOptions } from "./env"
 import { swaggerOptions } from "./swagger"
@@ -20,10 +19,7 @@ server.register(fastifyJwt, { secret: "secret" })
 server.register(fastifyAuth)
 server.register(fastifyCors, corsOptions)
 
-const verifyJwt = buildVerifyJwtDecorator(server)
-server.decorate("verifyJwt", verifyJwt)
-
-server.register(AuthRoute)
+server.register(authRoutes)
 
 server.listen(8080, (err, address) => {
   if (err) {
