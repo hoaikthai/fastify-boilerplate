@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest, HTTPMethods } from "fast
 import { User } from "../models/User"
 
 export type SignUpRequest = {
-  email: string
+  username: string
   password: string
 }
 
@@ -18,19 +18,19 @@ export const buildSignUpRoute = (fastify: FastifyInstance) => ({
     body: {
       type: "object",
       properties: {
-        email: { type: "string" },
+        username: { type: "string" },
         password: { type: "string" },
       },
-      required: ["email", "password"],
+      required: ["username", "password"],
     },
   },
   handler: async (request: FastifyRequest<{ Body: SignUpRequest; Reply: SignUpResponse }>, reply: FastifyReply) => {
     request.log.info("Signing up")
-    const { email, password } = request.body
+    const { username, password } = request.body
     // todo: encrypt password
 
     const db = await fastify.pg.connect()
-    const result = await db.query<User>("INSERT INTO users (email, password) VALUES ($1, $2)", [email, password])
+    const result = await db.query<User>("INSERT INTO users (username, password) VALUES ($1, $2)", [username, password])
     db.release()
 
     request.log.info("User created")
@@ -52,10 +52,10 @@ export const signUpOptions = {
     body: {
       type: "object",
       properties: {
-        email: { type: "string" },
+        username: { type: "string" },
         password: { type: "string" },
       },
-      required: ["email", "password"],
+      required: ["username", "password"],
     },
   },
 }
@@ -64,11 +64,11 @@ export const buildSignUpHandler =
   (fastify: FastifyInstance) =>
   async (request: FastifyRequest<{ Body: SignUpRequest; Reply: SignUpResponse }>, reply: FastifyReply) => {
     request.log.info("Signing up")
-    const { email, password } = request.body
+    const { username, password } = request.body
     // todo: encrypt password
 
     const db = await fastify.pg.connect()
-    const result = await db.query<User>("INSERT INTO users (email, password) VALUES ($1, $2)", [email, password])
+    const result = await db.query<User>("INSERT INTO users (username, password) VALUES ($1, $2)", [username, password])
     db.release()
 
     request.log.info("User created")
