@@ -1,6 +1,6 @@
 const envSchema = {
   type: "object",
-  require: ["AUTH_SECRET"],
+  required: ["AUTH_SECRET"],
   properties: {
     AUTH_SECRET: {
       type: "string",
