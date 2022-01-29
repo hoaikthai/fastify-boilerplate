@@ -15,7 +15,7 @@ const server = fastify({ logger: true })
 server.register(fastifyEnv, envOptions)
 server.register(prismaPlugin)
 server.register(fastifySwagger, swaggerOptions)
-server.register(fastifyJwt, { secret: "secret" })
+server.register(fastifyJwt, { secret: server.env.AUTH_SECRET })
 server.register(fastifyAuth)
 server.register(fastifyCors, corsOptions)
 

@@ -8,6 +8,14 @@ const envSchema = {
   },
 }
 
+declare module "fastify" {
+  interface FastifyInstance {
+    env: {
+      AUTH_SECRET: string
+    }
+  }
+}
+
 export const envOptions = {
   confKey: "env",
   schema: envSchema,
