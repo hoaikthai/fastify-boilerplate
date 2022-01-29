@@ -4,15 +4,18 @@ import fastifyCors from "fastify-cors"
 import fastifyEnv from "fastify-env"
 import fastifyJwt from "fastify-jwt"
 import fastifyPostgres from "fastify-postgres"
+import fastifySwagger from "fastify-swagger"
 import { AuthRoute } from "./auth"
 import { buildVerifyJwtDecorator } from "./auth/decorators/verifyJwt"
 import { corsOptions } from "./cors"
 import { envOptions } from "./env"
+import { swaggerOptions } from "./swagger"
 
 const server = fastify({ logger: true })
 
 server.register(fastifyEnv, envOptions)
 server.register(fastifyPostgres, { connectionString: "postgres://postgres@localhost/postgres" })
+server.register(fastifySwagger, swaggerOptions)
 server.register(fastifyJwt, { secret: "secret" })
 server.register(fastifyAuth)
 server.register(fastifyCors, corsOptions)
