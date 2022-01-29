@@ -3,17 +3,17 @@ import fastifyAuth from "fastify-auth"
 import fastifyCors from "fastify-cors"
 import fastifyEnv from "fastify-env"
 import fastifyJwt from "fastify-jwt"
-import fastifyPostgres from "fastify-postgres"
 import fastifySwagger from "fastify-swagger"
 import { authRoutes } from "./auth"
 import { corsOptions } from "./cors"
 import { envOptions } from "./env"
+import { prismaPlugin } from "./prisma"
 import { swaggerOptions } from "./swagger"
 
 const server = fastify({ logger: true })
 
 server.register(fastifyEnv, envOptions)
-server.register(fastifyPostgres, { connectionString: "postgres://postgres@localhost/postgres" })
+server.register(prismaPlugin)
 server.register(fastifySwagger, swaggerOptions)
 server.register(fastifyJwt, { secret: "secret" })
 server.register(fastifyAuth)

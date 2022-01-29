@@ -1,6 +1,6 @@
+import { User } from "@prisma/client"
 import { FastifyInstance, FastifyReply } from "fastify"
 import { FastifyRequest } from "fastify"
-import { User } from "../../models/User"
 
 export const buildVerifyJwtDecorator =
   (fastify: FastifyInstance) => (request: FastifyRequest, reply: FastifyReply, done: (error?: Error) => void) => {
@@ -11,16 +11,11 @@ export const buildVerifyJwtDecorator =
     fastify.jwt.verify(request.raw.headers.authorization, async (err, decoded?: User) => {
       if (err || !decoded) return done(new Error("Invalid token"))
 
-      const db = await fastify.pg.connect()
-      const result = await db.query<User>("SELECT * FROM users WHERE id = $1 AND username = $2", [
-        decoded.id,
-        decoded.username,
-      ])
-      db.release()
+      const user = await fastify.prisma.user.findFirst({ where: { id: decoded.id, username: decoded.username } })
 
-      if (result.rowCount === 0) return done(new Error("Invalid token"))
+      if (!user) return done(new Error("Invalid token"))
 
-      request.user = result.rows[0]
+      request.user = user
     })
 
     done()

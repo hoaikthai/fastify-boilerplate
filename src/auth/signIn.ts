@@ -1,5 +1,5 @@
+import { User } from "@prisma/client"
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
-import { User } from "../models/User"
 
 export type SignInRequest = {
   username: string
@@ -30,13 +30,12 @@ export const buildSignInHandler =
     const { username, password } = request.body
     // todo: encrypt password
 
-    const db = await fastify.pg.connect()
-    const result = await db.query<User>("SELECT id, username, password FROM users WHERE username=$1", [username])
-    db.release()
+    const user: User | null = await fastify.prisma.user.findUnique({
+      where: { username },
+      select: { id: true, username: true, password: true },
+    })
 
-    if (result.rowCount === 0) return reply.code(401).send({ message: "Invalid credentials" })
-
-    const user = result.rows[0]
+    if (!user) return reply.code(401).send({ message: "Invalid credentials" })
 
     if (user.password !== password) return reply.code(401).send({ message: "Invalid credentials" })
 

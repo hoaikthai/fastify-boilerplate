@@ -1,5 +1,5 @@
+import { User } from "@prisma/client"
 import { FastifyInstance, FastifyReply, FastifyRequest, HTTPMethods } from "fastify"
-import { User } from "../models/User"
 
 export type SignUpRequest = {
   username: string
@@ -29,13 +29,14 @@ export const buildSignUpRoute = (fastify: FastifyInstance) => ({
     const { username, password } = request.body
     // todo: encrypt password
 
-    const db = await fastify.pg.connect()
-    const result = await db.query<User>("INSERT INTO users (username, password) VALUES ($1, $2)", [username, password])
-    db.release()
+    const user = await fastify.prisma.user.create({
+      data: {
+        username,
+        password,
+      },
+    })
 
     request.log.info("User created")
-
-    const user = result.rows[0]
 
     fastify.jwt.sign({ id: user.id }, (err: Error | null, token: string) => {
       if (err) {
@@ -67,13 +68,14 @@ export const buildSignUpHandler =
     const { username, password } = request.body
     // todo: encrypt password
 
-    const db = await fastify.pg.connect()
-    const result = await db.query<User>("INSERT INTO users (username, password) VALUES ($1, $2)", [username, password])
-    db.release()
+    const user = await fastify.prisma.user.create({
+      data: {
+        username,
+        password,
+      },
+    })
 
     request.log.info("User created")
-
-    const user = result.rows[0]
 
     fastify.jwt.sign({ id: user.id }, (err: Error | null, token: string) => {
       if (err) {

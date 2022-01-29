@@ -1,5 +1,5 @@
+import { User } from "@prisma/client"
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
-import { User } from "../models/User"
 import { buildVerifyJwtDecorator } from "./decorators/verifyJwt"
 
 export type GetCurrentUserResponse = {
