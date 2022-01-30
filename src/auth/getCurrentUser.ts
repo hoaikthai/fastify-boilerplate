@@ -10,7 +10,7 @@ export const getGetCurrentUserOptions = (fastify: FastifyInstance) => {
   const verifyJwt = buildVerifyJwtDecorator(fastify)
 
   return {
-    preHandler: fastify.auth([verifyJwt]),
+    preValidation: fastify.auth([verifyJwt]),
   }
 }
 

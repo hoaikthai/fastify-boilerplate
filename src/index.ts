@@ -5,6 +5,7 @@ import fastifyEnv from "fastify-env"
 import fastifyJwt from "fastify-jwt"
 import fastifySwagger from "fastify-swagger"
 import { authRoutes } from "./auth"
+import { buildVerifyJwtDecorator } from "./auth/decorators/verifyJwt"
 import { corsOptions } from "./plugins/cors"
 import { envOptions } from "./plugins/env"
 import { prismaPlugin } from "./plugins/prisma"
@@ -12,10 +13,11 @@ import { swaggerOptions } from "./plugins/swagger"
 
 const server = fastify({ logger: true })
 
-server.register(fastifyEnv, envOptions)
+server.register(fastifyEnv, envOptions).after(() => {
+  server.register(fastifyJwt, { secret: server.env.AUTH_SECRET })
+})
 server.register(prismaPlugin)
 server.register(fastifySwagger, swaggerOptions)
-server.register(fastifyJwt, { secret: server.env.AUTH_SECRET })
 server.register(fastifyAuth)
 server.register(fastifyCors, corsOptions)
 

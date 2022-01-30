@@ -21,6 +21,11 @@ export const swaggerOptions = {
         },
       },
     },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
   exposeRoute: true,
   routePrefix: "/api-docs",
