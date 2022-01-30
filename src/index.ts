@@ -1,5 +1,6 @@
 import fastify from "fastify"
 import fastifyAuth from "fastify-auth"
+import fastifyBcrypt from "fastify-bcrypt"
 import fastifyCors from "fastify-cors"
 import fastifyEnv from "fastify-env"
 import fastifyJwt from "fastify-jwt"
@@ -16,6 +17,7 @@ server.register(fastifyEnv, envOptions).after(() => {
   server.register(fastifyJwt, { secret: server.env.AUTH_SECRET })
 })
 server.register(prismaPlugin)
+server.register(fastifyBcrypt)
 server.register(fastifySwagger, swaggerOptions)
 server.register(fastifyAuth)
 server.register(fastifyCors, corsOptions)

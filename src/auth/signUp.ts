@@ -1,5 +1,6 @@
 import { User } from "@prisma/client"
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
+import { buildUserResponse } from "./helpers/buildUserResponse"
 
 export type SignUpRequest = {
   username: string
@@ -29,12 +30,12 @@ export const buildSignUpHandler =
   async (request: FastifyRequest<{ Body: SignUpRequest; Reply: SignUpResponse }>, reply: FastifyReply) => {
     request.log.info("Signing up")
     const { username, password } = request.body
-    // todo: encrypt password
+    const encryptedPassword = await fastify.bcrypt.hash(password)
 
     const user = await fastify.prisma.user.create({
       data: {
         username,
-        password,
+        encryptedPassword,
       },
     })
 
@@ -44,7 +45,7 @@ export const buildSignUpHandler =
       if (err) {
         reply.code(500).send({ message: "Error signing up" })
       } else {
-        reply.send({ token, user })
+        reply.send({ token, user: buildUserResponse(user) })
       }
     })
   }
