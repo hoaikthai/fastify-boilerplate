@@ -1,6 +1,6 @@
 import { User } from "@prisma/client"
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
-import { buildUserResponse } from "./helpers/buildUserResponse"
+import { buildUserResponse } from "../helpers/buildUserResponse"
 
 export type SignUpRequest = {
   username: string
